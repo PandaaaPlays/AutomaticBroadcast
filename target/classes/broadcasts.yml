@@ -26,7 +26,7 @@ broadcasts:
       - "       plugin! I hope it will be helpful on your server!"
       - "   &bVisit the support discord for any help with the plugin!"
       - ""
-    # What will occur when a player clicks on the broadcast (:
+    # What will occur when a player clicks on the broadcast :
     # "*" -> Suggests a message in the player's chat. (Ex.: *exemple -> Suggests "exemple")
     # "/" -> Suggests a command in the player's chat. (Ex.: /exemple -> Suggests "/exemple")
     # Anything else opens a link if IT IS VALID! (Make sure to add "https://...")
@@ -38,7 +38,7 @@ broadcasts:
       - "&3&l* &fUseful informations!"
       - "&3&l* &fClickable!"
     # The sound played for every player receiving the broadcast.
-    # Please refer to the bukkit list of sound: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+    # Please refer to the bukkit list of sounds : https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
     sound: ENTITY_EXPERIENCE_ORB_PICKUP
     exempted_players:
       - exempted-player1

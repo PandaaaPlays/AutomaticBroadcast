@@ -1,4 +1,4 @@
-package ca.pandaaa.automaticbroadcast;
+package ca.pandaaa.automaticbroadcast.broadcast;
 
 import org.bukkit.Sound;
 

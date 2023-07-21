@@ -1,20 +1,25 @@
-package ca.pandaaa.utils;
+package ca.pandaaa.automaticbroadcast.utils;
 
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class ConfigManager {
     // Attributes //
     private final FileConfiguration configuration;
     private final FileConfiguration broadcasts;
+    private final FileConfiguration toggles;
 
     // Constructor //
-    public ConfigManager(FileConfiguration configuration, FileConfiguration broadcasts) {
+    public ConfigManager(FileConfiguration configuration, FileConfiguration broadcasts, FileConfiguration toggles) {
         this.configuration = configuration;
         this.broadcasts = broadcasts;
+        this.toggles = toggles;
     }
 
     // Returns the time between every broadcast (in ticks.. 20 ticks is 1 sec) //
@@ -57,6 +62,14 @@ public class ConfigManager {
         return Utils.applyFormat(configuration.getString("plugin-reload"));
     }
 
+    // Returns the plugin toggle command messages //
+    public String getBroadcastToggleMessage(String type) {
+        if(type.equals("on"))
+            return Utils.applyFormat(configuration.getString("toggle-on-message"));
+        else
+            return Utils.applyFormat(configuration.getString("toggle-off-message"));
+    }
+
     // Returns a list of all the existing broadcasts (Staff, Discord, etc.) //
     public String[] getBroadcastTitles() {
         // Creates a Set with all the titles of the messages directly from the "broadcasts.yml" file //
@@ -89,5 +102,13 @@ public class ConfigManager {
         } catch(Exception exception) {
             return null;
         }
+    }
+
+    public void setPlayerToggle(Player player, boolean toggle) {
+        toggles.set(player.getUniqueId() + ".toggled", toggle);
+    }
+
+    public boolean getPlayerToggle(Player player) {
+        return toggles.getBoolean(player.getUniqueId() + ".toggled");
     }
 }
