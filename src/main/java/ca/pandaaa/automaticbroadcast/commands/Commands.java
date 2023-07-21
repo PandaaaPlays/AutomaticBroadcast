@@ -1,10 +1,9 @@
-package ca.pandaaa.commands;
+package ca.pandaaa.automaticbroadcast.commands;
 
 import ca.pandaaa.automaticbroadcast.AutomaticBroadcast;
-import ca.pandaaa.automaticbroadcast.Broadcast;
-import ca.pandaaa.automaticbroadcast.BroadcastManager;
-import ca.pandaaa.utils.ConfigManager;
-import ca.pandaaa.utils.Utils;
+import ca.pandaaa.automaticbroadcast.broadcast.Broadcast;
+import ca.pandaaa.automaticbroadcast.utils.ConfigManager;
+import ca.pandaaa.automaticbroadcast.utils.Utils;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;
@@ -36,9 +35,16 @@ public class Commands implements CommandExecutor {
                 case "reload":
                     reloadPlugin(sender);
                     break;
-                // "list" will display all the broadcasts rapidly //
+                // "list" will display all the broadcasts in one shot //
                 case "list":
                     sendList(sender);
+                    break;
+                // "toggle" will toggle the
+                case "toggle":
+                    if(args.length == 2)
+                        toggleBroadcast(sender, args[1]);
+                    else
+                        toggleBroadcast(sender, "Toggle");
                     break;
                 // Anything else will send the error //
                 default:
@@ -58,6 +64,22 @@ public class Commands implements CommandExecutor {
 
         // Reloads the configurations and sends the confirmation message //
         AutomaticBroadcast.getPlugin().reloadConfig(sender);
+    }
+
+    // Toggle the broadcasts //
+    public void toggleBroadcast(CommandSender sender, String type) {
+        if (!sender.hasPermission("automaticbroadcast.toggle") || !(sender instanceof Player)) {
+            sendNoPermissionMessage(sender);
+            return;
+        }
+
+        type = type.toLowerCase();
+
+        if(!type.equals("on") && !type.equals("off"))
+            type = "Toggle";
+
+        // Reloads the configurations and sends the confirmation message //
+        AutomaticBroadcast.getPlugin().getBroadcastToggle().togglePlayerBroadcast(((Player) sender), type);
     }
 
     // Sends all the broadcast to the sender of the command //

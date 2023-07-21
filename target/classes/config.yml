@@ -35,3 +35,9 @@ no-permission: "&c&l[!] &cYou do not have enough permission to do this."
 
 # The message displayed when the configuration of the plugin is reloaded.
 plugin-reload: "&3&lAuto&b&lmatic&8&lBroad&7&lcast &7&l>> &bPlugin Reloaded."
+
+# The message sent to the sender of the "/automaticbroadcast toggle" (on) command.
+toggle-on-message: "&3&lAuto&b&lmatic&8&lBroad&7&lcast &7&l>> &bBroadcasts &aenabled&b."
+
+# The message sent to the sender of the "/automaticbroadcast toggle" (off) command.
+toggle-off-message: "&3&lAuto&b&lmatic&8&lBroad&7&lcast &7&l>> &bBroadcasts &cdisabled&b."

@@ -1,7 +1,5 @@
-package ca.pandaaa.utils;
+package ca.pandaaa.automaticbroadcast.utils;
 
-import ca.pandaaa.automaticbroadcast.AutomaticBroadcast;
-import ca.pandaaa.automaticbroadcast.Broadcast;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;

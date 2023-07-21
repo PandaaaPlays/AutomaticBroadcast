@@ -1,14 +1,19 @@
 package ca.pandaaa.automaticbroadcast;
 
-import ca.pandaaa.commands.Commands;
-import ca.pandaaa.commands.TabCompletion;
-import ca.pandaaa.utils.ConfigManager;
-import ca.pandaaa.utils.Metrics;
+import ca.pandaaa.automaticbroadcast.broadcast.Broadcast;
+import ca.pandaaa.automaticbroadcast.broadcast.BroadcastManager;
+import ca.pandaaa.automaticbroadcast.broadcast.BroadcastToggle;
+import ca.pandaaa.automaticbroadcast.commands.Commands;
+import ca.pandaaa.automaticbroadcast.commands.TabCompletion;
+import ca.pandaaa.automaticbroadcast.utils.ConfigManager;
+import ca.pandaaa.automaticbroadcast.utils.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -22,6 +27,9 @@ public class AutomaticBroadcast extends JavaPlugin {
     // Generates the broadcasts.yml file //
     private File broadcastsFile;
     private FileConfiguration broadcastsConfig;
+    // Generates the broadcast-toggles.yml file //
+    private File togglesFile;
+    private FileConfiguration togglesConfig;
 
     // Attributes //
     private static AutomaticBroadcast plugin;
@@ -29,6 +37,7 @@ public class AutomaticBroadcast extends JavaPlugin {
     private BroadcastManager broadcastManager;
     private BukkitTask automaticBroadcastTask;
     private List<Broadcast> broadcastList;
+    private BroadcastToggle broadcastToggle;
 
     // What should happen when the plugin enables //
     @Override
@@ -42,14 +51,16 @@ public class AutomaticBroadcast extends JavaPlugin {
 
         // Configurations initialization //
         saveDefaultConfigurations();
-        loadBroadcastsConfig();
-        configManager = new ConfigManager(getConfig(), broadcastsConfig);
+        loadConfigurations();
+        configManager = new ConfigManager(getConfig(), broadcastsConfig, togglesConfig);
 
         // Changes the manager with a new one (because the configurations might have changed) //
         broadcastManager = new BroadcastManager(createBroadcastList());
 
-        // Creates the command //
-        getCommands();
+        // Creates the command and sync the listener //
+        getCommandsAndListeners();
+
+        broadcastToggle = new BroadcastToggle(configManager);
 
         // Starts the broadcasting //
         startBroadcasting();
@@ -62,6 +73,14 @@ public class AutomaticBroadcast extends JavaPlugin {
         getServer().getConsoleSender().sendMessage("");
     }
 
+    // Saves the online players' toggle status on disabled of the plugin //
+    @Override
+    public void onDisable() {
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            broadcastToggle.saveBroadcastToggle(player);
+        }
+    }
+
     // Saves the default configuration files (creates them in the case that they don't already exist) //
     private void saveDefaultConfigurations() {
         this.saveDefaultConfig();
@@ -69,21 +88,42 @@ public class AutomaticBroadcast extends JavaPlugin {
         if (!broadcastsFile.exists())
             saveResource("broadcasts.yml", false);
         broadcastsConfig = new YamlConfiguration();
+
+        togglesFile = new File(getDataFolder(), "broadcast-toggles.yml");
+        if (!togglesFile.exists())
+            saveResource("broadcast-toggles.yml", false);
+        togglesConfig = new YamlConfiguration();
     }
 
-    // Tries to load the broadcasts.yml file //
-    private void loadBroadcastsConfig() {
+    // Saves the broadcast-toggles.yml file //
+    public void saveBroadcastToggles() {
+        try {
+            togglesConfig.save(togglesFile);
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
+    }
+
+    // Tries to load the broadcasts.yml and broadcast-toggles.yml files //
+    private void loadConfigurations() {
         try {
             broadcastsConfig.load(broadcastsFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            togglesConfig.load(togglesFile);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
     }
 
     // Creates or changes the command //
-    private void getCommands() {
+    private void getCommandsAndListeners() {
         getCommand("AutomaticBroadcast").setExecutor(new Commands());
         getCommand("AutomaticBroadcast").setTabCompleter(new TabCompletion());
+        getServer().getPluginManager().registerEvents(broadcastManager, this);
     }
 
     // Returns the plugin //
@@ -117,11 +157,13 @@ public class AutomaticBroadcast extends JavaPlugin {
         plugin.reloadConfig();
         // Replaces the messages data by the ones from the file //
         broadcastsConfig = YamlConfiguration.loadConfiguration(broadcastsFile);
+        togglesConfig = YamlConfiguration.loadConfiguration(togglesFile);
 
         // Replaces the commands and attributes //
-        configManager = new ConfigManager(getConfig(), broadcastsConfig);
+        configManager = new ConfigManager(getConfig(), broadcastsConfig, togglesConfig);
         broadcastManager = new BroadcastManager(createBroadcastList());
-        getCommands();
+        broadcastToggle = new BroadcastToggle(configManager);
+        getCommandsAndListeners();
 
         // Sends the confirmation message to the command executor //
         sender.sendMessage(configManager.getPluginReloadMessage());
@@ -149,5 +191,10 @@ public class AutomaticBroadcast extends JavaPlugin {
     // Returns the list of broadcasts created on start //
     public List<Broadcast> getBroadcastList() {
         return broadcastList;
+    }
+
+    // Returns the toggle manager of the plugin //
+    public BroadcastToggle getBroadcastToggle() {
+        return broadcastToggle;
     }
 }

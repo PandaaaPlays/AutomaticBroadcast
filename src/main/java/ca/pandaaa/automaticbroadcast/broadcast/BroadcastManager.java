@@ -1,18 +1,23 @@
-package ca.pandaaa.automaticbroadcast;
+package ca.pandaaa.automaticbroadcast.broadcast;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import ca.pandaaa.utils.ConfigManager;
-import ca.pandaaa.utils.Utils;
+import ca.pandaaa.automaticbroadcast.AutomaticBroadcast;
+import ca.pandaaa.automaticbroadcast.utils.ConfigManager;
+import ca.pandaaa.automaticbroadcast.utils.Utils;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
-public class BroadcastManager {
+public class BroadcastManager implements Listener {
 
     // Classes instances //
     AutomaticBroadcast plugin = AutomaticBroadcast.getPlugin();
@@ -92,7 +97,20 @@ public class BroadcastManager {
         if (!configManager.getExemptedPlayers().isEmpty())
             players = players.stream().filter(player -> !configManager.getExemptedPlayers().contains(player.getName())).collect(Collectors.toList());
         if (configManager.getExemptPermission())
-            players = players.stream().filter(player -> player.hasPermission("automaticbroadcast.exempt")).collect(Collectors.toList());
+            players = players.stream().filter(player -> !player.hasPermission("automaticbroadcast.exempt")).collect(Collectors.toList());
+        players = players.stream().filter(player -> plugin.getBroadcastToggle().isBroadcastToggledOn(player)).collect(Collectors.toList());
         return players;
+    }
+
+    // Restores the player's toggle status on join event. //
+    @EventHandler
+    public void onJoinEvent(PlayerJoinEvent event) {
+        plugin.getBroadcastToggle().restoreBroadcastToggle(event.getPlayer());
+    }
+
+    // Saves the player's toggle status on quit event. //
+    @EventHandler
+    public void onLeaveEvent(PlayerQuitEvent event) {
+        plugin.getBroadcastToggle().saveBroadcastToggle(event.getPlayer());
     }
 }

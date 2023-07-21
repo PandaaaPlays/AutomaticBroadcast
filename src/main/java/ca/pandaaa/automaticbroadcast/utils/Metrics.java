@@ -1,4 +1,4 @@
-package ca.pandaaa.utils;
+package ca.pandaaa.automaticbroadcast.utils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
