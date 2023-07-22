@@ -4,10 +4,8 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.File;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class ConfigManager {
     // Attributes //
@@ -109,6 +107,8 @@ public class ConfigManager {
     }
 
     public boolean getPlayerToggle(Player player) {
+        if(!toggles.getKeys(false).contains(player.getUniqueId().toString()))
+            return true;
         return toggles.getBoolean(player.getUniqueId() + ".toggled");
     }
 }
