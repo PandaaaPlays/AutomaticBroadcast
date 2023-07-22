@@ -35,6 +35,8 @@ public class BroadcastToggle {
     }
 
     public boolean isBroadcastToggledOn(Player player) {
+        if(!broadcastToggle.containsKey(player.getUniqueId()))
+            broadcastToggle.put(player.getUniqueId(), true);
         return broadcastToggle.get(player.getUniqueId());
     }
 
