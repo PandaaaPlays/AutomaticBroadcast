@@ -16,28 +16,43 @@ import java.util.regex.Pattern;
 public class Utils {
     // Applies the format used threw the whole plugin (returns a formatted string) //
     public static String applyFormat(String message) {
+        return applyFormat(message, false);
+    }
+
+    public static String applyFormat(String message, boolean isHoverBox) {
         // Replaces the double arrows automatically //
         message = message.replace(">>", "»").replace("<<", "«");
 
         // Changes the hex color code to set the colors //
         Pattern hexPattern = Pattern.compile("&#([A-Fa-f0-9]){6}");
-        Matcher matcher = hexPattern.matcher(message);
-        while (matcher.find()) {
-            ChatColor hexColor = ChatColor.of(matcher.group().substring(1));
-            String before = message.substring(0, matcher.start());
-            String after = message.substring(matcher.end());
+        Matcher matcherHex = hexPattern.matcher(message);
+        while (matcherHex.find()) {
+            ChatColor hexColor = ChatColor.of(matcherHex.group().substring(1));
+            String before = message.substring(0, matcherHex.start());
+            String after = message.substring(matcherHex.end());
             message = before + hexColor + after;
-            matcher = hexPattern.matcher(message);
+            matcherHex = hexPattern.matcher(message);
         }
 
-        // Returns the message with the correct colors and formats //
-        return ChatColor.translateAlternateColorCodes('&', message);
+        message = ChatColor.translateAlternateColorCodes('&', message);
+
+        if(!isHoverBox) {
+            Pattern centeredPattern = Pattern.compile("\\[centered].*");
+            Matcher matcherCentered = centeredPattern.matcher(message);
+            while (matcherCentered.find()) {
+                message = getCenteredMessage(matcherCentered.group().substring(10));
+
+                matcherCentered = centeredPattern.matcher(message);
+            }
+        }
+
+        return message;
     }
 
     // Applies the hover event on the broadcast //
     public static void setHoverBroadcastEvent(TextComponent component, List<String> hoverMessagesList, Player broadcastReceivers) {
         // Checks for empty hover arguments //
-        if (hoverMessagesList.size() == 0)
+        if (hoverMessagesList.isEmpty())
             return;
 
         // Creates an empty component builder //
@@ -49,7 +64,7 @@ public class Utils {
             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null && broadcastReceivers != null)
                 hoverMessages = PlaceholderAPI.setPlaceholders(broadcastReceivers, hoverMessages);
             // Adds the message to the component builder //
-            TextComponent textComponent = new TextComponent(TextComponent.fromLegacyText(applyFormat(hoverMessages)));
+            TextComponent textComponent = new TextComponent(TextComponent.fromLegacyText(applyFormat(hoverMessages, true)));
             hoverMessageBuilder.append(textComponent);
             // Changes the line if not at the last message //
             if (hoverLine != (hoverMessagesList.size() - 1)) {
@@ -65,7 +80,7 @@ public class Utils {
     // Applies the click event on the broadcast //
     public static void setClickBroadcastEvent(TextComponent component, String click) {
         // If the click string is null, return //
-        if (click == null || click.length() == 0) return;
+        if (click == null || click.isEmpty()) return;
 
         // Checks the char at the start of the click string (config: broadcastTitle.click)
         switch (click.charAt(0)) {
@@ -82,5 +97,39 @@ public class Utils {
                 component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, click));
                 break;
         }
+    }
+
+    private static String getCenteredMessage(String message) {
+        if(message == null || message.isEmpty())
+            return message;
+
+        int messagePixelSize = 0;
+        boolean previousIsSectionSign = false;
+        boolean isBold = false;
+
+        for(char character : message.toCharArray()){
+            if(character == '§'){
+                previousIsSectionSign = true;
+            } else if(previousIsSectionSign) {
+                previousIsSectionSign = false;
+                isBold = character == 'l' || character == 'L';
+            } else {
+                FontInformation fontInformation = FontInformation.getDefaultFontInformation(character);
+                messagePixelSize += isBold ? fontInformation.getBoldLength() : fontInformation.getLength();
+                messagePixelSize++;
+            }
+        }
+
+        int centerPixel = 154;
+        int halvedMessageSize = messagePixelSize / 2;
+        int toCompensate = centerPixel - halvedMessageSize;
+        int spaceLength = FontInformation.SPACE.getLength() + 1;
+        int compensated = 0;
+        StringBuilder stringBuilder = new StringBuilder();
+        while(compensated < toCompensate){
+            stringBuilder.append(" ");
+            compensated += spaceLength;
+        }
+        return stringBuilder + message;
     }
 }
