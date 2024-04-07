@@ -8,6 +8,7 @@
 # Placeholders:
 # Use '&' to use the basic minecraft color code.
 # The plugin also supports hex colors : '&#123456'
+# To center a message line, put '[centered]' at its start.
 # To create color gradients, you can use : https://rgb.birdflop.com/
 # >> -> Changes automatically to the double arrow character.
 # AutomaticBroadcast also supports PlaceHolderAPI placeholders (make sure the extension(s) you need are downloaded!)
@@ -59,9 +60,9 @@ broadcasts:
   staff:
     messages:
       - ""
-      - "             &c&l<< &4&l! &c&l>> Staff Assistance"
-      - "  &fIf you need any form of help or assistance"
-      - "    from our staff, do not hesitate to ask us!"
-      - "      &cMessage all online staff using: /helpop"
+      - "[centered]&c&l<< &4&l! &c&l>> Staff Assistance"
+      - "[centered]&fIf you need any form of help or assistance"
+      - "[centered]from our staff, do not hesitate to ask us!"
+      - "[centered]&cMessage all online staff using: /helpop"
       - ""
     click: "*I need support!"
