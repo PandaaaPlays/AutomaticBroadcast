@@ -9,13 +9,17 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class BroadcastToggle {
-    // False = will not receive broadcasts //
-    // True = will receive broadcasts //
-    private HashMap<UUID, Boolean> broadcastToggle = new HashMap<UUID, Boolean>();
+    // True = will receive broadcasts
+    // False = will not receive broadcasts
+    private final HashMap<UUID, Boolean> broadcastToggle = new HashMap<>();
     private final ConfigManager config;
 
     public BroadcastToggle(ConfigManager config) {
         this.config = config;
+
+        if(config.isToggleDisabled())
+            return;
+
         for(Player player : Bukkit.getOnlinePlayers()) {
             restoreBroadcastToggle(player);
         }

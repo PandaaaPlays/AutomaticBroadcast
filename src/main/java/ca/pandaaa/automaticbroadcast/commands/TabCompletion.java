@@ -1,17 +1,18 @@
 package ca.pandaaa.automaticbroadcast.commands;
 
+import ca.pandaaa.automaticbroadcast.AutomaticBroadcast;
+import ca.pandaaa.automaticbroadcast.utils.ConfigManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TabCompletion implements TabCompleter {
-
-    // Proposes completion for the automaticbroadcast command //
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String arg, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, @NotNull Command cmd, @NotNull String arg, String[] args) {
         List<String> completionList = new ArrayList<>();
         if (sender.hasPermission("automaticbroadcast.config")) {
             if(args.length == 1) {
@@ -19,7 +20,9 @@ public class TabCompletion implements TabCompleter {
                 completionList.add("reload");
             }
         }
-        if(sender.hasPermission("automaticbroadcast.toggle")) {
+
+        ConfigManager configManager = AutomaticBroadcast.getPlugin().getConfigManager();
+        if(sender.hasPermission("automaticbroadcast.toggle") && !configManager.isToggleDisabled()) {
             if(args.length == 1)
                 completionList.add("toggle");
             if(args.length == 2) {
