@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,8 +51,10 @@ public class AutomaticBroadcast extends JavaPlugin {
         int pluginId = 13749;
         Metrics metrics = new Metrics(this, pluginId);
 
+        configManager = new ConfigManager(getConfig());
         saveDefaultConfigurations();
         loadConfigurations();
+        // The Configuration Manager cannot be used for its broadcasts and toggles properties before this point.
         configManager = new ConfigManager(getConfig(), broadcastsConfig, togglesConfig);
         broadcastManager = new BroadcastManager(createBroadcastList());
 

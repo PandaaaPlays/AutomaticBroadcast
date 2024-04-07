@@ -13,6 +13,12 @@ public class ConfigManager {
     private final FileConfiguration broadcasts;
     private final FileConfiguration toggles;
 
+    public ConfigManager(FileConfiguration configuration) {
+        this.configuration = configuration;
+        this.broadcasts = null;
+        this.toggles = null;
+    }
+
     public ConfigManager(FileConfiguration configuration, FileConfiguration broadcasts, FileConfiguration toggles) {
         this.configuration = configuration;
         this.broadcasts = broadcasts;
