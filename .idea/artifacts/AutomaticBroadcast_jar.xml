@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="AutomaticBroadcast:jar">
-    <output-path>$PROJECT_DIR$/../../Minecraft Server/plugins</output-path>
-    <root id="archive" name="AutomaticBroadcast.jar">
-      <element id="module-output" name="AutomaticBroadcast" />
-    </root>
-  </artifact>
-</component>
