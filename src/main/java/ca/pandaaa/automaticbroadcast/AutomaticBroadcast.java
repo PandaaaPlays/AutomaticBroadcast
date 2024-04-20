@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.checkerframework.checker.units.qual.C;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,6 +78,8 @@ public class AutomaticBroadcast extends JavaPlugin {
         for(Player player : Bukkit.getOnlinePlayers()) {
             broadcastToggle.saveBroadcastToggle(player);
         }
+
+        this.saveBroadcastToggles();
     }
 
     private void saveDefaultConfigurations() {
@@ -96,7 +97,7 @@ public class AutomaticBroadcast extends JavaPlugin {
         togglesConfig = new YamlConfiguration();
     }
 
-    public void saveBroadcastToggles() {
+    private void saveBroadcastToggles() {
         if (configManager.isToggleDisabled())
             return;
 

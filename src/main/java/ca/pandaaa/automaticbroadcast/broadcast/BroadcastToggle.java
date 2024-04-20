@@ -1,6 +1,5 @@
 package ca.pandaaa.automaticbroadcast.broadcast;
 
-import ca.pandaaa.automaticbroadcast.AutomaticBroadcast;
 import ca.pandaaa.automaticbroadcast.utils.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -47,7 +46,6 @@ public class BroadcastToggle {
 
     public void saveBroadcastToggle(Player player) {
         config.setPlayerToggle(player, broadcastToggle.get(player.getUniqueId()));
-        AutomaticBroadcast.getPlugin().saveBroadcastToggles();
     }
 
     public void restoreBroadcastToggle(Player player) {
