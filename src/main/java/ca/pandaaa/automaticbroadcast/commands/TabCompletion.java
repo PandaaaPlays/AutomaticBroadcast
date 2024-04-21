@@ -1,6 +1,7 @@
 package ca.pandaaa.automaticbroadcast.commands;
 
 import ca.pandaaa.automaticbroadcast.AutomaticBroadcast;
+import ca.pandaaa.automaticbroadcast.broadcast.Broadcast;
 import ca.pandaaa.automaticbroadcast.utils.ConfigManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,8 +17,14 @@ public class TabCompletion implements TabCompleter {
         List<String> completionList = new ArrayList<>();
         if (sender.hasPermission("automaticbroadcast.config")) {
             if(args.length == 1) {
-                completionList.add("list");
+                completionList.add("preview");
                 completionList.add("reload");
+            }
+            if(args.length == 2 && args[0].equalsIgnoreCase("preview")) {
+                List<Broadcast> broadcastList = AutomaticBroadcast.getPlugin().getBroadcastList();
+                for (Broadcast broadcast : broadcastList) {
+                    completionList.add(broadcast.getTitle());
+                }
             }
         }
 
@@ -25,7 +32,7 @@ public class TabCompletion implements TabCompleter {
         if(sender.hasPermission("automaticbroadcast.toggle") && !configManager.isToggleDisabled()) {
             if(args.length == 1)
                 completionList.add("toggle");
-            if(args.length == 2) {
+            if(args.length == 2 && args[0].equalsIgnoreCase("toggle")) {
                 completionList.add("on");
                 completionList.add("off");
             }
