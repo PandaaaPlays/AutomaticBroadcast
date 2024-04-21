@@ -14,6 +14,8 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.*;
+
 public class Commands implements CommandExecutor {
     ConfigManager configManager = AutomaticBroadcast.getPlugin().getConfigManager();
 
@@ -33,8 +35,11 @@ public class Commands implements CommandExecutor {
                 case "reload":
                     reloadPlugin(sender);
                     break;
-                case "list":
-                    sendList(sender);
+                case "preview":
+                    if(args.length == 2)
+                        preview(sender, args[1]);
+                    else
+                        preview(sender, "All");
                     break;
                 case "toggle":
                     if(args.length == 2)
@@ -78,13 +83,27 @@ public class Commands implements CommandExecutor {
         AutomaticBroadcast.getPlugin().getBroadcastToggle().togglePlayerBroadcast(((Player) sender), type);
     }
 
-    private void sendList(CommandSender sender) {
+    private void preview(CommandSender sender, String broadcastTitle) {
         if (!sender.hasPermission("automaticbroadcast.config")) {
             sendNoPermissionMessage(sender);
             return;
         }
 
-        for (Broadcast broadcast : AutomaticBroadcast.getPlugin().getBroadcastList()) {
+        List<Broadcast> broadcastList = AutomaticBroadcast.getPlugin().getBroadcastList();
+        if(!broadcastTitle.equalsIgnoreCase("All")) {
+            Optional<Broadcast> preview = broadcastList.stream()
+                    .filter(b -> b.getTitle().equalsIgnoreCase(broadcastTitle))
+                    .findFirst();
+
+            if(preview.isPresent())
+                broadcastList = Collections.singletonList(preview.get());
+            else {
+                sendUnknownCommandMessage(sender);
+                return;
+            }
+        }
+
+        for (Broadcast broadcast : broadcastList) {
             for (String broadcastMessages : broadcast.getMessages()) {
                 if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null && sender instanceof Player)
                     broadcastMessages = PlaceholderAPI.setPlaceholders((Player) sender, broadcastMessages);
