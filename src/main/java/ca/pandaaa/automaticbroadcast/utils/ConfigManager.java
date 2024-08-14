@@ -94,6 +94,14 @@ public class ConfigManager {
         }
     }
 
+    public List<String> getBroadcastExemptedPlayers(String broadcastTitle) {
+        return broadcasts.getStringList("broadcasts." + broadcastTitle + ".exempted_players");
+    }
+
+    public List<String> getBroadcastConsoleCommands(String broadcastTitle) {
+        return broadcasts.getStringList("broadcasts." + broadcastTitle + ".console-commands");
+    }
+
     public void setPlayerToggle(Player player, boolean toggle) {
         toggles.set(player.getUniqueId() + ".toggled", toggle);
     }

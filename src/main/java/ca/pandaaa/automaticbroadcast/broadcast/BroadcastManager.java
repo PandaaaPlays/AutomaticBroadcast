@@ -50,7 +50,7 @@ public class BroadcastManager implements Listener {
     }
 
     private void sendBroadcast(Broadcast broadcast) {
-        for (Player broadcastReceivers : getReceivers()) {
+        for (Player broadcastReceivers : getReceivers(broadcast)) {
             if (configManager.getBroadcastSound(broadcastList.get(currentIndex).getTitle()) != null)
                 broadcastReceivers.playSound(broadcastReceivers.getLocation(), broadcast.getSound(), 1, 1);
 
@@ -65,13 +65,17 @@ public class BroadcastManager implements Listener {
                 broadcastReceivers.spigot().sendMessage(message);
             }
         }
+        for(String command : broadcast.getConsoleCommands()) {
+            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
+        }
     }
 
     // -> The player must not be in a disabled world.
     // -> The player must not be in the exempted player list.
     // -> If the exempt permission is enabled, the player must not have the exempt permission.
     // -> The player must have the broadcasts toggled on.
-    public Collection<? extends Player> getReceivers() {
+    // -> The player must not be exempted for the specific broadcast.
+    public Collection<? extends Player> getReceivers(Broadcast broadcast) {
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         if (!configManager.getDisabledWorlds().isEmpty())
             players = players.stream().filter(player -> !configManager.getDisabledWorlds().contains(player.getWorld().getName())).collect(Collectors.toList());
@@ -81,6 +85,8 @@ public class BroadcastManager implements Listener {
             players = players.stream().filter(player -> !player.hasPermission("automaticbroadcast.exempt")).collect(Collectors.toList());
         if (!configManager.isToggleDisabled())
             players = players.stream().filter(player -> plugin.getBroadcastToggle().isBroadcastToggledOn(player)).collect(Collectors.toList());
+        players = players.stream().filter(player -> !broadcast.getExemptedPlayers().contains(player)).collect(Collectors.toList());
+
         return players;
     }
 

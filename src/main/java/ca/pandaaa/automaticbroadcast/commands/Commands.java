@@ -104,6 +104,8 @@ public class Commands implements CommandExecutor {
         }
 
         for (Broadcast broadcast : broadcastList) {
+            if(sender instanceof Player && !broadcastTitle.equalsIgnoreCase("All"))
+                ((Player)sender).playSound(((Player)sender).getLocation(), broadcast.getSound(), 1, 1);
             for (String broadcastMessages : broadcast.getMessages()) {
                 if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null && sender instanceof Player)
                     broadcastMessages = PlaceholderAPI.setPlaceholders((Player) sender, broadcastMessages);
