@@ -49,20 +49,20 @@ public class BroadcastManager implements Listener {
         sendBroadcast(broadcastList.get(currentIndex));
     }
 
-    private void sendBroadcast(Broadcast broadcast) {
-        for (Player broadcastReceivers : getReceivers(broadcast)) {
+    public void sendBroadcast(Broadcast broadcast) {
+        for (Player broadcastReceiver : getReceivers(broadcast)) {
             if (configManager.getBroadcastSound(broadcastList.get(currentIndex).getTitle()) != null)
-                broadcastReceivers.playSound(broadcastReceivers.getLocation(), broadcast.getSound(), 1, 1);
+                broadcastReceiver.playSound(broadcastReceiver.getLocation(), broadcast.getSound(), 1, 1);
 
-            for (String broadcastMessages : broadcast.getMessages()) {
+            for (String broadcastMessage : broadcast.getMessages()) {
                 if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
-                    broadcastMessages = PlaceholderAPI.setPlaceholders(broadcastReceivers, broadcastMessages);
+                    broadcastMessage = PlaceholderAPI.setPlaceholders(broadcastReceiver, broadcastMessage);
 
-                TextComponent message = new TextComponent(TextComponent.fromLegacyText(Utils.applyFormat(broadcastMessages)));
-                Utils.setHoverBroadcastEvent(message, broadcast.getHoverMessages(), broadcastReceivers);
+                TextComponent message = new TextComponent(TextComponent.fromLegacyText(Utils.applyFormat(broadcastMessage)));
+                Utils.setHoverBroadcastEvent(message, broadcast.getHoverMessages(), broadcastReceiver);
                 Utils.setClickBroadcastEvent(message, broadcast.getClickMessage());
 
-                broadcastReceivers.spigot().sendMessage(message);
+                broadcastReceiver.spigot().sendMessage(message);
             }
         }
         for(String command : broadcast.getConsoleCommands()) {
@@ -85,7 +85,7 @@ public class BroadcastManager implements Listener {
             players = players.stream().filter(player -> !player.hasPermission("automaticbroadcast.exempt")).collect(Collectors.toList());
         if (!configManager.isToggleDisabled())
             players = players.stream().filter(player -> plugin.getBroadcastToggle().isBroadcastToggledOn(player)).collect(Collectors.toList());
-        players = players.stream().filter(player -> !broadcast.getExemptedPlayers().contains(player)).collect(Collectors.toList());
+        players = players.stream().filter(player -> !broadcast.getExemptedPlayers().contains(player.getName())).collect(Collectors.toList());
 
         return players;
     }

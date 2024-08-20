@@ -22,8 +22,14 @@ public class TabCompletion implements TabCompleter {
             }
             if(args.length == 2 && args[0].equalsIgnoreCase("preview")) {
                 List<Broadcast> broadcastList = AutomaticBroadcast.getPlugin().getBroadcastList();
+                List<Broadcast> scheduledBroadcastList = AutomaticBroadcast.getPlugin().getScheduledBroadcastList();
                 for (Broadcast broadcast : broadcastList) {
                     completionList.add(broadcast.getTitle());
+                }
+                if(scheduledBroadcastList != null) {
+                    for (Broadcast broadcast : scheduledBroadcastList) {
+                        completionList.add(broadcast.getTitle());
+                    }
                 }
             }
         }

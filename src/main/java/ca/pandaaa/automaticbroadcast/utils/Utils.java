@@ -47,7 +47,7 @@ public class Utils {
     }
 
     public static void setHoverBroadcastEvent(TextComponent component, List<String> hoverMessagesList, Player broadcastReceivers) {
-        if (hoverMessagesList.isEmpty())
+        if (hoverMessagesList == null || hoverMessagesList.isEmpty())
             return;
 
         ComponentBuilder hoverMessageBuilder = new ComponentBuilder();

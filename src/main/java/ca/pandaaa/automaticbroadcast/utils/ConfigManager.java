@@ -95,7 +95,7 @@ public class ConfigManager {
     }
 
     public List<String> getBroadcastExemptedPlayers(String broadcastTitle) {
-        return broadcasts.getStringList("broadcasts." + broadcastTitle + ".exempted_players");
+        return broadcasts.getStringList("broadcasts." + broadcastTitle + ".exempted-players");
     }
 
     public List<String> getBroadcastConsoleCommands(String broadcastTitle) {

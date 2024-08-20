@@ -13,7 +13,7 @@ public class Broadcast {
     private final String title;
     private final String clickMessage;
     private final Sound sound;
-    private final List<Player> exemptedPlayers;
+    private final List<String> exemptedPlayers;
     private final List<String> consoleCommands;
 
     public Broadcast(String title, List<String> messages, Sound sound,
@@ -24,13 +24,16 @@ public class Broadcast {
         this.sound = sound;
         this.hoverMessages = hoverMessages;
         this.clickMessage = clickMessage;
-        this.exemptedPlayers = new ArrayList<>();
-        for(String string : exemptedPlayers) {
-            Player player = Bukkit.getPlayer(string);
-            if (player != null)
-                this.exemptedPlayers.add(player);
-        }
-        this.consoleCommands = consoleCommands;
+
+        if(exemptedPlayers != null)
+            this.exemptedPlayers = exemptedPlayers;
+        else
+            this.exemptedPlayers = new ArrayList<>();
+
+        if(consoleCommands != null)
+            this.consoleCommands = consoleCommands;
+        else
+            this.consoleCommands = new ArrayList<>();
     }
 
     public String getTitle() {
@@ -53,7 +56,7 @@ public class Broadcast {
         return clickMessage;
     }
 
-    public List<Player> getExemptedPlayers() {
+    public List<String> getExemptedPlayers() {
         return exemptedPlayers;
     }
 

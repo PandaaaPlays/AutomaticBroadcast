@@ -1,5 +1,7 @@
 package ca.pandaaa.automaticbroadcast;
 
+import ca.pandaaa.automaticbroadcast.api.BroadcastAPI;
+import ca.pandaaa.automaticbroadcast.api.PluginReloadEvent;
 import ca.pandaaa.automaticbroadcast.broadcast.Broadcast;
 import ca.pandaaa.automaticbroadcast.broadcast.BroadcastManager;
 import ca.pandaaa.automaticbroadcast.broadcast.BroadcastToggle;
@@ -34,10 +36,15 @@ public class AutomaticBroadcast extends JavaPlugin {
     private BroadcastManager broadcastManager;
     private BukkitTask automaticBroadcastTask;
     private List<Broadcast> broadcastList;
+    private List<Broadcast> scheduledBroadcastList;
     private BroadcastToggle broadcastToggle;
 
     public List<Broadcast> getBroadcastList() {
         return broadcastList;
+    }
+
+    public List<Broadcast> getScheduledBroadcastList() {
+        return scheduledBroadcastList;
     }
 
     public BroadcastToggle getBroadcastToggle() {
@@ -82,6 +89,42 @@ public class AutomaticBroadcast extends JavaPlugin {
         this.saveBroadcastToggles();
     }
 
+    public static AutomaticBroadcast getPlugin() {
+        return plugin;
+    }
+
+    public BroadcastAPI getBroadcastAPI() {
+
+        if(broadcastManager == null) {
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&c(!) The AutomaticBroadcast API cannot be accessed before initiating the Broadcast Manager. " +
+                    "&cMake sure the plugin is in the dependencies."));
+            return null;
+        }
+        return new BroadcastAPI(broadcastManager);
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
+
+    public void reloadConfig(CommandSender sender) {
+        plugin.reloadConfig();
+        broadcastsConfig = YamlConfiguration.loadConfiguration(broadcastsFile);
+        togglesConfig = YamlConfiguration.loadConfiguration(togglesFile);
+
+        configManager = new ConfigManager(getConfig(), broadcastsConfig, togglesConfig);
+        broadcastManager = new BroadcastManager(createBroadcastList());
+        if (!configManager.isToggleDisabled())
+            broadcastToggle = new BroadcastToggle(configManager);
+        getCommandsAndListeners();
+
+        sender.sendMessage(configManager.getPluginReloadMessage());
+        startBroadcasting();
+
+        Bukkit.getServer().getPluginManager().callEvent(new PluginReloadEvent(sender));
+    }
+
     private void saveDefaultConfigurations() {
         this.saveDefaultConfig();
         broadcastsFile = new File(getDataFolder(), "broadcasts.yml");
@@ -108,29 +151,6 @@ public class AutomaticBroadcast extends JavaPlugin {
         }
     }
 
-    public static AutomaticBroadcast getPlugin() {
-        return plugin;
-    }
-
-    public ConfigManager getConfigManager() {
-        return configManager;
-    }
-
-    public void reloadConfig(CommandSender sender) {
-        plugin.reloadConfig();
-        broadcastsConfig = YamlConfiguration.loadConfiguration(broadcastsFile);
-        togglesConfig = YamlConfiguration.loadConfiguration(togglesFile);
-
-        configManager = new ConfigManager(getConfig(), broadcastsConfig, togglesConfig);
-        broadcastManager = new BroadcastManager(createBroadcastList());
-        if (!configManager.isToggleDisabled())
-            broadcastToggle = new BroadcastToggle(configManager);
-        getCommandsAndListeners();
-
-        sender.sendMessage(configManager.getPluginReloadMessage());
-        startBroadcasting();
-    }
-
     private List<Broadcast> createBroadcastList() {
         List<Broadcast> broadcastList = new ArrayList<>();
         String[] broadcastTitles = configManager.getBroadcastTitles();
@@ -144,6 +164,10 @@ public class AutomaticBroadcast extends JavaPlugin {
         }
         this.broadcastList = broadcastList;
         return broadcastList;
+    }
+
+    public void createScheduledBroadcastList(List<Broadcast> broadcasts) {
+        this.scheduledBroadcastList = broadcasts;
     }
 
     private void startBroadcasting() {

@@ -90,6 +90,10 @@ public class Commands implements CommandExecutor {
         }
 
         List<Broadcast> broadcastList = AutomaticBroadcast.getPlugin().getBroadcastList();
+        List<Broadcast> scheduledBroadcastList = AutomaticBroadcast.getPlugin().getScheduledBroadcastList();
+        if(scheduledBroadcastList != null)
+            broadcastList.addAll(scheduledBroadcastList);
+
         if(!broadcastTitle.equalsIgnoreCase("All")) {
             Optional<Broadcast> preview = broadcastList.stream()
                     .filter(b -> b.getTitle().equalsIgnoreCase(broadcastTitle))
