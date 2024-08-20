@@ -29,6 +29,9 @@ public class BroadcastManager implements Listener {
     }
 
     public void automaticBroadcast() {
+        if(broadcastList == null || broadcastList.isEmpty())
+            return;
+
         if (configManager.getRandom())
             sendRandomBroadcast();
         else {
