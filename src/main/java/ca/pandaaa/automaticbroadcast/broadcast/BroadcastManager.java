@@ -69,7 +69,8 @@ public class BroadcastManager implements Listener {
             }
         }
         for(String command : broadcast.getConsoleCommands()) {
-            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
+            if(!command.equals(""))
+                plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
         }
     }
 
