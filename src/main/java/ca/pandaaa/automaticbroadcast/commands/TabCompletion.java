@@ -17,20 +17,25 @@ public class TabCompletion implements TabCompleter {
         List<String> completionList = new ArrayList<>();
         if (sender.hasPermission("automaticbroadcast.config")) {
             if(args.length == 1) {
-                completionList.add("preview");
                 completionList.add("reload");
             }
+        }
+
+        if (sender.hasPermission("automaticbroadcast.broadcast")) {
+            if(args.length == 1) {
+                completionList.add("broadcast");
+            }
+            if(args.length == 2 && args[0].equalsIgnoreCase("broadcast")) {
+                getCompletionBroadcastList(sender, completionList);
+            }
+        }
+
+        if (sender.hasPermission("automaticbroadcast.preview")) {
+            if(args.length == 1) {
+                completionList.add("preview");
+            }
             if(args.length == 2 && args[0].equalsIgnoreCase("preview")) {
-                List<Broadcast> broadcastList = AutomaticBroadcast.getPlugin().getBroadcastList();
-                List<Broadcast> scheduledBroadcastList = AutomaticBroadcast.getPlugin().getScheduledBroadcastList();
-                for (Broadcast broadcast : broadcastList) {
-                    completionList.add(broadcast.getTitle());
-                }
-                if(scheduledBroadcastList != null) {
-                    for (Broadcast broadcast : scheduledBroadcastList) {
-                        completionList.add(broadcast.getTitle());
-                    }
-                }
+                getCompletionBroadcastList(sender, completionList);
             }
         }
 
@@ -44,5 +49,20 @@ public class TabCompletion implements TabCompleter {
             }
         }
         return completionList;
+    }
+
+    private void getCompletionBroadcastList(CommandSender sender, List<String> completionList) {
+        List<Broadcast> broadcastList = AutomaticBroadcast.getPlugin().getBroadcastList();
+        List<Broadcast> scheduledBroadcastList = AutomaticBroadcast.getPlugin().getScheduledBroadcastList();
+        for (Broadcast broadcast : broadcastList) {
+            if(sender.hasPermission("automaticbroadcast." + broadcast.getTitle()))
+                completionList.add(broadcast.getTitle());
+        }
+        if(scheduledBroadcastList != null) {
+            for (Broadcast broadcast : scheduledBroadcastList) {
+                if(sender.hasPermission("automaticbroadcast." + broadcast.getTitle()))
+                    completionList.add(broadcast.getTitle());
+            }
+        }
     }
 }

@@ -170,6 +170,10 @@ public class AutomaticBroadcast extends JavaPlugin {
         this.scheduledBroadcastList = broadcasts;
     }
 
+    public BroadcastManager getBroadcastManager() {
+        return broadcastManager;
+    }
+
     private void startBroadcasting() {
         if (automaticBroadcastTask != null) automaticBroadcastTask.cancel();
 

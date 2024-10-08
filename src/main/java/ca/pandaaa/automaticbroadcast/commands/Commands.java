@@ -41,6 +41,12 @@ public class Commands implements CommandExecutor {
                     else
                         preview(sender, "All");
                     break;
+                case "broadcast":
+                    if(args.length == 2)
+                        broadcast(sender, args[1]);
+                    else
+                        sendUnknownCommandMessage(sender);
+                    break;
                 case "toggle":
                     if(args.length == 2)
                         toggleBroadcast(sender, args[1]);
@@ -84,7 +90,7 @@ public class Commands implements CommandExecutor {
     }
 
     private void preview(CommandSender sender, String broadcastTitle) {
-        if (!sender.hasPermission("automaticbroadcast.config")) {
+        if (!sender.hasPermission("automaticbroadcast." + broadcastTitle) || !sender.hasPermission("automaticbroadcast.preview")) {
             sendNoPermissionMessage(sender);
             return;
         }
@@ -123,6 +129,28 @@ public class Commands implements CommandExecutor {
                 sender.spigot().sendMessage(message);
             }
         }
+    }
+
+    private void broadcast(CommandSender sender, String broadcastTitle) {
+        if (!sender.hasPermission("automaticbroadcast." + broadcastTitle) || !sender.hasPermission("automaticbroadcast.broadcast")) {
+            sendNoPermissionMessage(sender);
+            return;
+        }
+
+        List<Broadcast> broadcastList = AutomaticBroadcast.getPlugin().getBroadcastList();
+        List<Broadcast> scheduledBroadcastList = AutomaticBroadcast.getPlugin().getScheduledBroadcastList();
+        if(scheduledBroadcastList != null)
+            broadcastList.addAll(scheduledBroadcastList);
+        Optional<Broadcast> broadcast = broadcastList.stream()
+                .filter(b -> b.getTitle().equalsIgnoreCase(broadcastTitle))
+                .findFirst();
+
+        if(broadcast.isPresent())
+            AutomaticBroadcast.getPlugin().getBroadcastManager().sendBroadcast(broadcast.get());
+        else {
+            sendUnknownCommandMessage(sender);
+        }
+
     }
 
     private void sendUnknownCommandMessage(CommandSender sender) {
