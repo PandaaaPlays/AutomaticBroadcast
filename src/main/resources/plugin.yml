@@ -1,5 +1,5 @@
 name: AutomaticBroadcast
-version: 1.7.2
+version: 1.8.0
 author: Pandaaa
 main: ca.pandaaa.automaticbroadcast.AutomaticBroadcast
 softdepend: [PlaceHolderAPI]
@@ -12,7 +12,11 @@ commands:
 permissions:
   automaticbroadcast.exempt:
     default: op
-  automaticbroadcast.config:
+  automaticbroadcast.reload:
     default: op
   automaticbroadcast.toggle:
+    default: op
+  automaticbroadcast.broadcast:
+    default: op
+  automaticbroadcast.preview:
     default: op

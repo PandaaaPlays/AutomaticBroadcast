@@ -15,7 +15,7 @@ public class TabCompletion implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, @NotNull Command cmd, @NotNull String arg, String[] args) {
         List<String> completionList = new ArrayList<>();
-        if (sender.hasPermission("automaticbroadcast.config")) {
+        if (sender.hasPermission("automaticbroadcast.reload")) {
             if(args.length == 1) {
                 completionList.add("reload");
             }

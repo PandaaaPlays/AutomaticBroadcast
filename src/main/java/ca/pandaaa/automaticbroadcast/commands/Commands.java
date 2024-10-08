@@ -62,7 +62,7 @@ public class Commands implements CommandExecutor {
     }
 
     private void reloadPlugin(CommandSender sender) {
-        if (!sender.hasPermission("automaticbroadcast.config")) {
+        if (!sender.hasPermission("automaticbroadcast.reload")) {
             sendNoPermissionMessage(sender);
             return;
         }
