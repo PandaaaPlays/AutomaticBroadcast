@@ -28,8 +28,8 @@ broadcasts:
       - "   &bVisit the support discord for any help with the plugin!"
       - ""
     # What will occur when a player clicks on the broadcast :
-    # "*" -> Suggests a message in the player's chat. (Ex.: *exemple -> Suggests "exemple")
-    # "/" -> Suggests a command in the player's chat. (Ex.: /exemple -> Suggests "/exemple")
+    # "*" -> Suggests a message or command in the player's chat. (Ex.: */exemple -> Suggests "/exemple")
+    # "/" -> Forces the player to execute a command. (Ex.: /exemple -> Executes "/exemple")
     # Anything else opens a link if IT IS VALID! (Make sure to add "https://...")
     click: "/automaticbroadcast"
     # The tooltip that will be displayed when the players hover over the message.

@@ -70,11 +70,11 @@ public class Utils {
         if (click == null || click.isEmpty()) return;
 
         switch (click.charAt(0)) {
-            // '/' suggests a command (with the /) //
-            // '*' suggests a message (without the *) //
+            // '*' suggests a message or command (without the *) //
+            // '/' runs a command //
             // Anything else will try to open a link (will not work if the link is not a real link) //
             case '/':
-                component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, click));
+                component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, click));
                 break;
             case '*':
                 component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, click.substring(1)));

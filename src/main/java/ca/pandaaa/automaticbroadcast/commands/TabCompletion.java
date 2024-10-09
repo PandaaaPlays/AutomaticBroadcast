@@ -15,32 +15,32 @@ public class TabCompletion implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, @NotNull Command cmd, @NotNull String arg, String[] args) {
         List<String> completionList = new ArrayList<>();
-        if (sender.hasPermission("automaticbroadcast.reload")) {
+        if (sender.hasPermission("automaticbroadcast.reload") && "reload".startsWith(args[0])) {
             if(args.length == 1) {
                 completionList.add("reload");
             }
         }
 
-        if (sender.hasPermission("automaticbroadcast.broadcast")) {
+        if (sender.hasPermission("automaticbroadcast.broadcast") && "broadcast".startsWith(args[0])) {
             if(args.length == 1) {
                 completionList.add("broadcast");
             }
-            if(args.length == 2 && args[0].equalsIgnoreCase("broadcast")) {
-                getCompletionBroadcastList(sender, completionList);
+            if(args.length == 2 && args[0].equalsIgnoreCase("broadcast") ) {
+                getCompletionBroadcastList(sender, completionList, args[1]);
             }
         }
 
-        if (sender.hasPermission("automaticbroadcast.preview")) {
+        if (sender.hasPermission("automaticbroadcast.preview") && "preview".startsWith(args[0])) {
             if(args.length == 1) {
                 completionList.add("preview");
             }
             if(args.length == 2 && args[0].equalsIgnoreCase("preview")) {
-                getCompletionBroadcastList(sender, completionList);
+                getCompletionBroadcastList(sender, completionList, args[1]);
             }
         }
 
         ConfigManager configManager = AutomaticBroadcast.getPlugin().getConfigManager();
-        if(sender.hasPermission("automaticbroadcast.toggle") && !configManager.isToggleDisabled()) {
+        if(sender.hasPermission("automaticbroadcast.toggle") && !configManager.isToggleDisabled() && "toggle".startsWith(args[0])) {
             if(args.length == 1)
                 completionList.add("toggle");
             if(args.length == 2 && args[0].equalsIgnoreCase("toggle")) {
@@ -51,16 +51,16 @@ public class TabCompletion implements TabCompleter {
         return completionList;
     }
 
-    private void getCompletionBroadcastList(CommandSender sender, List<String> completionList) {
+    private void getCompletionBroadcastList(CommandSender sender, List<String> completionList, String arg) {
         List<Broadcast> broadcastList = AutomaticBroadcast.getPlugin().getBroadcastList();
         List<Broadcast> scheduledBroadcastList = AutomaticBroadcast.getPlugin().getScheduledBroadcastList();
         for (Broadcast broadcast : broadcastList) {
-            if(sender.hasPermission("automaticbroadcast." + broadcast.getTitle()))
+            if(sender.hasPermission("automaticbroadcast." + broadcast.getTitle()) && broadcast.getTitle().startsWith(arg))
                 completionList.add(broadcast.getTitle());
         }
         if(scheduledBroadcastList != null) {
             for (Broadcast broadcast : scheduledBroadcastList) {
-                if(sender.hasPermission("automaticbroadcast." + broadcast.getTitle()))
+                if(sender.hasPermission("automaticbroadcast." + broadcast.getTitle()) && broadcast.getTitle().startsWith(arg))
                     completionList.add(broadcast.getTitle());
             }
         }
