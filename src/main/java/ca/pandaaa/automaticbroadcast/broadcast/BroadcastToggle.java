@@ -45,7 +45,8 @@ public class BroadcastToggle {
     }
 
     public void saveBroadcastToggle(Player player) {
-        config.setPlayerToggle(player, broadcastToggle.get(player.getUniqueId()));
+        if(broadcastToggle.containsKey(player.getUniqueId()))
+            config.setPlayerToggle(player, broadcastToggle.get(player.getUniqueId()));
     }
 
     public void restoreBroadcastToggle(Player player) {

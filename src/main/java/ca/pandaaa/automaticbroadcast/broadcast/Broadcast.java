@@ -15,10 +15,17 @@ public class Broadcast {
     private final Sound sound;
     private final List<String> exemptedPlayers;
     private final List<String> consoleCommands;
+    private final String permission;
 
-    public Broadcast(String title, List<String> messages, Sound sound,
-                     List<String> hoverMessages, String clickMessage,
-                     List<String> exemptedPlayers, List<String> consoleCommands) {
+    public Broadcast(
+            String title,
+            List<String> messages,
+            Sound sound,
+            List<String> hoverMessages,
+            String clickMessage,
+            List<String> exemptedPlayers,
+            List<String> consoleCommands,
+            String permission) {
         this.title = title;
         this.messages = messages;
         this.sound = sound;
@@ -34,6 +41,20 @@ public class Broadcast {
             this.consoleCommands = consoleCommands;
         else
             this.consoleCommands = new ArrayList<>();
+
+        this.permission = permission;
+    }
+
+    // The API (old) is using this for the Scheduled Broadcast
+    public Broadcast(
+            String title,
+            List<String> messages,
+            Sound sound,
+            List<String> hoverMessages,
+            String clickMessage,
+            List<String> exemptedPlayers,
+            List<String> consoleCommands) {
+        this(title, messages, sound, hoverMessages, clickMessage, exemptedPlayers, consoleCommands, null);
     }
 
     public String getTitle() {
@@ -62,6 +83,10 @@ public class Broadcast {
 
     public List<String> getConsoleCommands() {
         return consoleCommands;
+    }
+
+    public String getPermission() {
+        return permission;
     }
 }
 

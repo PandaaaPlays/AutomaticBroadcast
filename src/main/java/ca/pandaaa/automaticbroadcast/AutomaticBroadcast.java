@@ -159,10 +159,11 @@ public class AutomaticBroadcast extends JavaPlugin {
             Broadcast broadcast = new Broadcast(title, configManager.getBroadcastMessagesList(title),
                     configManager.getBroadcastSound(title), configManager.getBroadcastHoverList(title),
                     configManager.getBroadcastClick(title), configManager.getBroadcastExemptedPlayers(title),
-                    configManager.getBroadcastConsoleCommands(title));
+                    configManager.getBroadcastConsoleCommands(title), configManager.getPermission(title));
             broadcastList.add(broadcast);
         }
         this.broadcastList = broadcastList;
+
         return broadcastList;
     }
 

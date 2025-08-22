@@ -1,5 +1,5 @@
 name: AutomaticBroadcast
-version: 1.9.0
+version: 1.10.0
 author: Pandaaa
 main: ca.pandaaa.automaticbroadcast.AutomaticBroadcast
 softdepend: [PlaceHolderAPI]

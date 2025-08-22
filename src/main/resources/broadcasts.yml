@@ -49,6 +49,20 @@ broadcasts:
     console-commands:
       - "give @a dirt"
       - "msg @a Thank you for installing my Plugin :)"
+    # The permission needed to see the broadcast (leave empty for none!)
+    permission: "automaticbroadcast.broadcast"
+
+  custommobs:
+    messages:
+      - ""
+      - "[centered]&e&l<< &6&l! &e&l>> &6&lCustom&e&lMobs   "
+      - "[centered]&fCheckout the CustomMobs plugin on spigot for"
+      - "[centered]&e&ncomplete&f modification of the mobs on your server!"
+      - "[centered]&eFind it on Spigot!"
+      - ""
+    click: "https://www.spigotmc.org/resources/custommobs-%C2%BB-create-custom-mobs-and-bosses-1-21-5-1-21-8.126382/"
+    hover:
+      - "&e&l<< &6&l! &e&l>> Click to see it on Spigot!"
 
   discord:
     messages:

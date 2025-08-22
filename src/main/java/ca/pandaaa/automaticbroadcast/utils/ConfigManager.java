@@ -115,4 +115,13 @@ public class ConfigManager {
     public boolean isToggleDisabled() {
         return configuration.getBoolean("disable-toggle");
     }
+
+    public boolean isDebugModeEnabled() {
+        return configuration.getBoolean("debug");
+    }
+
+    public String getPermission(String broadcastTitle) {
+        return broadcasts.getString("broadcasts." + broadcastTitle + ".permission");
+    }
+
 }

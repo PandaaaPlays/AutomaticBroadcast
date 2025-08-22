@@ -41,3 +41,6 @@ toggle-on-message: "&3&lAuto&b&lmatic&8&lBroad&7&lcast &7&l>> &bBroadcasts &aena
 
 # The message sent to the sender of the "/automaticbroadcast toggle" (off) command.
 toggle-off-message: "&3&lAuto&b&lmatic&8&lBroad&7&lcast &7&l>> &bBroadcasts &cdisabled&b."
+
+# Prints debug messages on the console (will spam console, only use for debugging).
+debug: false
