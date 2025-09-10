@@ -1,16 +1,18 @@
 package ca.pandaaa.automaticbroadcast.broadcast;
 
+import ca.pandaaa.automaticbroadcast.AutomaticBroadcast;
 import ca.pandaaa.automaticbroadcast.utils.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BroadcastToggle {
     // True = will receive broadcasts
     // False = will not receive broadcasts
-    private final HashMap<UUID, Boolean> broadcastToggle = new HashMap<>();
+    private final ConcurrentHashMap<UUID, Boolean> broadcastToggle = new ConcurrentHashMap<>();
     private final ConfigManager config;
 
     public BroadcastToggle(ConfigManager config) {
@@ -45,11 +47,23 @@ public class BroadcastToggle {
     }
 
     public void saveBroadcastToggle(Player player) {
-        if(broadcastToggle.containsKey(player.getUniqueId()))
-            config.setPlayerToggle(player, broadcastToggle.get(player.getUniqueId()));
+        UUID uuid = player.getUniqueId();
+        boolean state = broadcastToggle.getOrDefault(uuid, true);
+
+        Bukkit.getScheduler().runTaskAsynchronously(AutomaticBroadcast.getPlugin(), () -> {
+            config.setPlayerToggle(player, state);
+        });
     }
 
     public void restoreBroadcastToggle(Player player) {
-        broadcastToggle.put(player.getUniqueId(), config.getPlayerToggle(player));
+        UUID uuid = player.getUniqueId();
+
+        Bukkit.getScheduler().runTaskAsynchronously(AutomaticBroadcast.getPlugin(), () -> {
+            boolean state = config.getPlayerToggle(player);
+
+            Bukkit.getScheduler().runTask(AutomaticBroadcast.getPlugin(), () -> {
+                broadcastToggle.put(uuid, state);
+            });
+        });
     }
 }
