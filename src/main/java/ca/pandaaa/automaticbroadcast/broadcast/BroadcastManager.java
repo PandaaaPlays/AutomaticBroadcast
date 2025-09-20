@@ -109,7 +109,7 @@ public class BroadcastManager implements Listener {
     @EventHandler
     public void onLeaveEvent(PlayerQuitEvent event) {
         if (!configManager.isToggleDisabled())
-            plugin.getBroadcastToggle().saveBroadcastToggle(event.getPlayer());
+            plugin.getBroadcastToggle().saveBroadcastToggleAsync(event.getPlayer());
     }
 
     private void trySendBroadcastDebugMessage(Broadcast broadcast) {

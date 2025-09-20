@@ -50,6 +50,13 @@ public class BroadcastToggle {
         UUID uuid = player.getUniqueId();
         boolean state = broadcastToggle.getOrDefault(uuid, true);
 
+        config.setPlayerToggle(player, state);
+    }
+
+    public void saveBroadcastToggleAsync(Player player) {
+        UUID uuid = player.getUniqueId();
+        boolean state = broadcastToggle.getOrDefault(uuid, true);
+
         Bukkit.getScheduler().runTaskAsynchronously(AutomaticBroadcast.getPlugin(), () -> {
             config.setPlayerToggle(player, state);
         });
